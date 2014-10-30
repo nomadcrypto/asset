@@ -18,7 +18,7 @@ Then you:
 python asset.py btce btc_usd 1hr
 ```
 
-This data is taken from bitcoinwisdom for the given step and dumps a djson list with the 12 period ma in it.
+This data is taken from bitcoinwisdom for the given step and dumps a json list with the 12 period ma in it.
 it works for tracked pairs and markets on bitcoinwisdom
 
 
