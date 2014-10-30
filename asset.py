@@ -78,8 +78,6 @@ class Asset(object):
     def run(self, step):
         prices = self.getTicks(step)
         self.setup(prices)
-        print len(self.priceInfo.prices)
-        print len(self.priceInfo.stats.ma)
 
         total_prices = len(self.priceInfo.prices)
         ma_total = len(self.priceInfo.stats.ma)
