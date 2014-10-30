@@ -156,7 +156,8 @@ class StatInfo(object):
     def update(self):
         ###
         self.ma = self.asset.strat.movingAverage(self.priceInfo.price_closes,12)
-        self.detrend = np.array(self.asset.strat.detrend(self.priceInfo.price_closes[11:], self.ma))
+        offset = len(self.priceInfo.price_closes) - len(self.ma)
+        self.detrend = np.array(self.asset.strat.detrend(self.priceInfo.price_closes[offset:], self.ma))
         self.dma = self.asset.strat.movingAverage(self.detrend,12)
         self.dma_op = [(d*-1) for d in self.dma]
         self.detrend_mean = np.mean(self.detrend)
