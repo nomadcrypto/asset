@@ -4,32 +4,13 @@
  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
 
-      google.load("visualization", "1", {packages:["corechart"]});
-      /*
-      google.setOnLoadCallback(drawChart);*/
+google.load("visualization", "1", {packages:["corechart"]});
+
+function get_type(thing){
+  if(thing===null)return "[object Null]"; // special case
+  return Object.prototype.toString.call(thing);
+}
       
-      function drawChart(ma, asset_data) {
-        var chartdata = google.visualization.arrayToDataTable(ma)
-        alert("got this far")
-
-        var options = {
-
-          title: asset_data['market'] + " " + asset_data['pair'] + " " + asset_data['period'],
-          series: {
-            0:{color:"green"},
-            1:{color:"red"},
-            2:{color:"gold"},
-            3:{color:"blue"},
-            4:{color:"purple"}
-          }
-        }
-        id = asset_data['market'] + " " + asset_data['pair'] + "" + Math.random().toString(36).substring(7);
-        $("#charts").append("<div id='" + id + "' style='width: 900px; height: 500px;'></div><div id='" + id + "info' style='margin-left:125px'>volatility: " + asset_data['volatility']+ "&#37; <br> average low/high change: " + asset_data['average_lhp_diff'] + "&#37; <br></div>")
-        var asset_chart = new google.visualization.LineChart(document.getElementById(id));
-        ma_chart.draw(chartdata, options);
-
-
-      }
 
 
 
@@ -49,8 +30,31 @@ $(document).ready(function(){
       }
 
       $.getJSON( url, function( data ){
-        alert(type(data['ma']))
-        drawChart(market, pair, step, data['ma'], data['asset_data'])
+        
+        //strange... the ma array is an array now but if we don't process it now it will revert to a string
+        //this magic fucking string is an invalid json string to boot. wtf?
+        //alert(get_type(data['ma']))
+        
+        chartdata = google.visualization.arrayToDataTable(data['ma'])
+        asset_data = data['asset_data']
+
+        var options = {
+
+          title: asset_data['market'] + " " + asset_data['pair'] + " " + asset_data['period'],
+          series: {
+            0:{color:"green"},
+            1:{color:"red"},
+            2:{color:"gold"},
+            3:{color:"blue"},
+            4:{color:"purple"}
+          }
+        }
+        id = asset_data['market'] + " " + asset_data['pair'] + "" + Math.random().toString(36).substring(7);
+        $("#charts").append("<div id='" + id + "' style='width: 900px; height: 500px;'></div><div id='" + id + "info' style='margin-left:125px'>volatility: " + asset_data['volatility']+ "&#37; <br> average low/high change: " + asset_data['average_lhp_diff'] + "&#37; <br></div>")
+        var asset_chart = new google.visualization.LineChart(document.getElementById(id));
+        asset_chart.draw(chartdata, options);
+
+        //drawChart(market, pair, step, cd, data['asset_data'])
       })
     })
 
