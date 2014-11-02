@@ -30,17 +30,9 @@ python manage.py runserver
 
 Then open your browser and go to(example)
 ```
-http://localhost:8000/charts/btce/btc_usd/1d?display_periods=60
+http://localhost:8000/charts/
 ```
-
-the url format is:
-```
-http://localhost:8000/charts/{market}/{pair}/{step}?display_periods=x
-```
-
-if no display periods are given all results will be returned. The asset data shown below the chart will reflect averages for the given display periods. *this data does not yet reflect the asset variance.
-
-The available steps are: 1min, 5min, 15min, 30min, 1hr, and 1d
+For right now you must manually enter the market/pair and they must be valid. I do absolutely no validation yet. You can now add as many charts on the page as you want.
 
 
 This data is taken from bitcoinwisdom for the given step and should work for tracked pairs and markets on bitcoinwisdom
