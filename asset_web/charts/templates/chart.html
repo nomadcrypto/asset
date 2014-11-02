@@ -18,6 +18,13 @@ function get_type(thing){
 $(document).ready(function(){
     var markets = []
     //drawChart();
+
+    $("#clear").click(function(event){
+      event.preventDefault();
+
+      $("#charts").empty();
+
+    });
     $("#add_chart").submit(function(event){
       event.preventDefault()
       market = $("#market").val()
@@ -51,6 +58,8 @@ $(document).ready(function(){
         }
         id = asset_data['market'] + " " + asset_data['pair'] + "" + Math.random().toString(36).substring(7);
         $("#charts").append("<div id='" + id + "' style='width: 900px; height: 500px;'></div><div id='" + id + "info' style='margin-left:125px'>volatility: " + asset_data['volatility']+ "&#37; <br> average low/high change: " + asset_data['average_lhp_diff'] + "&#37; <br></div>")
+
+        //add delete link
         var asset_chart = new google.visualization.LineChart(document.getElementById(id));
         asset_chart.draw(chartdata, options);
 
@@ -63,9 +72,9 @@ $(document).ready(function(){
 </head>
 <body>
 <form id="add_chart">
-<input type="text" id="market" />
-<input type="text" id="pair" />
-<select id="step">
+Market: <input type="text" id="market" />
+Pair: <input type="text" id="pair" />
+Time Frame<select id="step">
   <option value="1min">1min</option>
   <option value="5min">5min</option>
   <option value="15min">15min</option>
@@ -73,8 +82,9 @@ $(document).ready(function(){
   <option value="1hr">1hr</option>
   <option value="1d">1d</option>
 </select>
-<input type="text" id="display_periods" value="0" />
+Display Periods<input type="text" id="display_periods" value="0" />
 <input type="submit" id="submit" value="Add Chart" />
+<button id="clear">Clear Charts</button>
 </form>
 
 <div id="charts">
