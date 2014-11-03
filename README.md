@@ -45,3 +45,4 @@ For right now you must manually enter the market/pair and they must be valid. I 
 
 
 This data is taken from bitcoinwisdom for the given step and should work for tracked pairs and markets on bitcoinwisdom
+
