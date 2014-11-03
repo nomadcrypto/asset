@@ -14,6 +14,11 @@ requests
 sudo pip install requests
 ```
 
+simplejson
+```
+sudo pip install simplejson
+```
+
 django
 ```
 sudo pip install django
@@ -34,7 +39,7 @@ http://localhost:8000/charts/
 ```
 
 ![Screenshot](/screenshot.png?raw=true "Screenshot")
-For right now you must manually enter the market/pair and they must be valid. I do absolutely no validation yet. You can now add as many charts on the page as you want.
+For right now you must manually enter the market/pair and they must be valid. I do absolutely no validation yet.
 
 
 This data is taken from bitcoinwisdom for the given step and should work for tracked pairs and markets on bitcoinwisdom
