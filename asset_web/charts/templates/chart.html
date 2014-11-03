@@ -11,17 +11,87 @@ function get_type(thing){
   return Object.prototype.toString.call(thing);
 }
 
-
+//["Date", "Price High", "Price Low", "12 MA", "Detrend 12ma", "Detrend 12ma OP"]
 var charts = {
 
+  display_options: {
+    detrend:{
+      0 : {"name": "Price High", "color":"#008A00"},
+      1 : {"name": "Price Low", "color":"#FF0000"},
+      2 : {"name": "12 MA", "color":"#E6E616"},
+      3 : {"name": "Detrend 12ma", "color":"#003399"},
+      4 : {"name": "Detrend 12ma OP", "color":"#6600CC"}
+    }
+
+  },
+
+  buildOptions:function() {
+    chart_type = $("#chart_type").val()
+    options = charts.display_options[chart_type]
+    ret = ""
+    $.each(options,function(k,v){
+
+      ret += "<input type='checkbox' class='display_option' id='option_" + k + "' checked />" + v["name"]
+      ret += "<input type='color' id='option_" + k + "_color' value='" + v['color'] + "' />"
+    })
+
+    $("#display_options").html(ret)
+
+  },
+
+  getOptions:function() {
+    checked = $("input.display_option:checked")
+    options = {}
+    chart_type = $("#chart_type").val();
+
+    $.each(checked, function(k,v) {
+      index = v.id.split("_")[1]
+      options[index] = charts.display_options[chart_type][index]
+      options[index]['color'] = $("#" + v.id + "_color").val()
+    })
+    return options
+
+  },
   detrend:function( data ){
     //strange... the ma array is an array now but if we don't process it now it will revert to a string
     //this magic fucking string is an invalid json string to boot. wtf?
     //alert(get_type(data['ma']))
         
-    chartdata = google.visualization.arrayToDataTable(data['chartdata'])
+    //chartdata = google.visualization.arrayToDataTable(data['chartdata'])
     asset_data = data['asset_display_data']
+    custom_options = charts.getOptions()
+    display_data = []
+    header = ["Date"]
+    display_series = {}
 
+    display_units = [0]
+    $.each(custom_options, function(k,v){
+      display_units.push(Number(k)+1)
+      header.push(v["name"])
+      display_series[Number(k)] = {'color':v['color']}
+    })
+
+    //console.log(header)
+
+    display_data.push(header)
+    num = 0
+
+    $.each(data['chartdata'], function(k,v) {
+      ret = []
+      if(num != 0) {
+        //console.log(v)
+        $.each(display_units, function(key, value) {
+          //console.log("value: " + value)
+          ret.push(v[Number(value)])
+        })
+        //console.log(ret)
+        display_data.push(ret)
+      }
+      num += 1
+    })
+    chartdata = google.visualization.arrayToDataTable(display_data)
+
+    /*
     var options = {
       title: asset_data['market'] + " " + asset_data['pair'] + " " + asset_data['period'],
       series: {
@@ -31,16 +101,21 @@ var charts = {
         3:{color:"blue"},
         4:{color:"purple"}
       }
+    }*/
+
+    var options = {
+      title: asset_data['market'] + " " + asset_data['pair'] + " " + asset_data['period'],
+      series: display_series,
     }
-        id = asset_data['market'] + " " + asset_data['pair'] + "" + Math.random().toString(36).substring(7);
-        $("#charts").append("<div id='" + id + "' style='width: 900px; height: 500px;'></div><div id='" + id + "info' style='margin-left:125px'>volatility: " + asset_data['volatility']+ "&#37; <br> average low/high change: " + asset_data['average_lhp_diff'] + "&#37; <br></div>")
+    id = asset_data['market'] + " " + asset_data['pair'] + "" + Math.random().toString(36).substring(7);
+    $("#charts").append("<div id='" + id + "' style='width: 900px; height: 500px;'></div><div id='" + id + "info' style='margin-left:125px'>volatility: " + asset_data['volatility']+ "&#37; <br> average low/high change: " + asset_data['average_lhp_diff'] + "&#37; <br></div>")
 
         //add delete link
-        var asset_chart = new google.visualization.LineChart(document.getElementById(id));
-        asset_chart.draw(chartdata, options);
+    var asset_chart = new google.visualization.LineChart(document.getElementById(id));
+    asset_chart.draw(chartdata, options);
 
         //drawChart(market, pair, step, cd, data['asset_data'])
-      }
+  }
 }
       
 
@@ -57,6 +132,8 @@ $(document).ready(function(){
       $("#charts").empty();
 
     });
+
+    charts.buildOptions();
     $("#add_chart").submit(function(event){
       event.preventDefault()
       c = {"detrend":charts.detrend}
@@ -120,8 +197,11 @@ Time Frame<select id="step">
   <option value="1d">1d</option>
 </select>
 Display Periods<input type="text" id="display_periods" value="0" />
-<input type="submit" id="submit" value="Add Chart" />
-<button id="clear">Clear Charts</button>
+<input type="submit" id="submit" value="Add Chart" /> 
+<button id="clear">Clear Charts</button><br>
+
+Display Options:
+<div id="display_options"></div>
 </form>
 
 <div id="charts">
