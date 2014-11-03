@@ -31,7 +31,7 @@ $(document).ready(function(){
       pair = $("#pair").val()
       step = $("#step").val()
       display_periods = $("#display_periods").val()
-      url = "http://localhost:8000/charts/" + market + "/" + pair + "/" + step
+      url = "{% url 'charts' %}" + market + "/" + pair + "/" + step
       if(display_periods != 0) {
         url  = url + "?display_periods=" + display_periods
       }
