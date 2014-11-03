@@ -1,7 +1,7 @@
 asset
 =====
 
-This is a chop out of my running bot and if you access to this you are granted personal or professional(trading) use from this code. The only thing I ask is that you do not give this code to anyone else for any reason unless you ask me first
+This is a chop out of my running bot
 
 You will need the following python packages
 numpy
@@ -32,6 +32,8 @@ Then open your browser and go to(example)
 ```
 http://localhost:8000/charts/
 ```
+
+![Screenshot](/screenshot.png?raw=true "Screenshot")
 For right now you must manually enter the market/pair and they must be valid. I do absolutely no validation yet. You can now add as many charts on the page as you want.
 
 
