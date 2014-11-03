@@ -21,8 +21,8 @@ var charts = {
       2 : {"name": "12 MA", "color":"#E6E616"},
       3 : {"name": "Detrend 12ma", "color":"#003399"},
       4 : {"name": "Detrend 12ma OP", "color":"#6600CC"}
-    }
-
+    },
+    candelstick: {},
   },
 
   buildOptions:function() {
@@ -51,6 +51,30 @@ var charts = {
       console.log(options[index])
     })
     return options
+
+  },
+
+  candelstick:function(data) {
+
+    asset_data = data['asset_display_data']
+    cd = []
+    $.each(data['chartdata'], function(k,v){
+      cd.push([v[0],Number(v[1]), Number(v[2]), Number(v[3]), Number(v[4])])
+    })
+    chartdata = google.visualization.arrayToDataTable(cd,true)
+
+    
+    id = asset_data['market'] + " " + asset_data['pair'] + "" + Math.random().toString(36).substring(7);
+    $("#charts").append("<div id='" + id + "' style='width: 100%; height: 500px;'></div><div id='" + id + "info' style='margin-left:125px'>volatility: " + asset_data['volatility']+ "&#37; <br> average low/high change: " + asset_data['average_lhp_diff'] + "&#37; <br></div>")
+
+    var options = {
+      title: asset_data['market'] + " " + asset_data['pair'] + " " + asset_data['period'],
+      legend:'none',
+    };
+
+    chart = new google.visualization.CandlestickChart(document.getElementById(id));
+    chart.draw(chartdata, options);
+
 
   },
   detrend:function( data ){
@@ -135,9 +159,13 @@ $(document).ready(function(){
     });
 
     charts.buildOptions();
+
+    $("#chart_type").change(function(event){
+      charts.buildOptions();
+    })
     $("#add_chart").submit(function(event){
       event.preventDefault()
-      c = {"detrend":charts.detrend}
+      c = {"detrend":charts.detrend, "candelstick":charts.candelstick}
       chart_type = $("#chart_type").val()
       market = $("#market").val()
       pair = $("#pair").val()
@@ -185,7 +213,8 @@ $(document).ready(function(){
 <body>
 <form id="add_chart">
 Chart<select id="chart_type">
-  <option value="detrend">Detrend</option>
+  <option value="detrend" selected>Detrend</option>
+  <option value="candelstick">CandelStick</option>
 </select>
 Market: <input type="text" id="market" />
 Pair: <input type="text" id="pair" />
