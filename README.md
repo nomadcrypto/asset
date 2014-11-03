@@ -1,9 +1,11 @@
 asset
 =====
 
-This is a chop out of my running bot
+This is a chop out of my running bot. If you find it useful and feel like donating please make a donation to seans outpost(http://seansoutpost.com) or bitcoin not bombs(http://www.bitcoinnotbombs.com/)
 
 You will need the following python packages
+
+
 numpy
 ```
 sudo pip install numpy
