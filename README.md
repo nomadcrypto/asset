@@ -33,7 +33,7 @@ cd asset_web
 python manage.py runserver
 ```
 
-Then open your browser and go to(example)
+Then open your browser and go to
 ```
 http://localhost:8000/charts/
 ```
