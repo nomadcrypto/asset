@@ -22,7 +22,7 @@ var charts = {
       3 : {"name": "Detrend 12ma", "color":"#003399"},
       4 : {"name": "Detrend 12ma OP", "color":"#6600CC"}
     },
-    candelstick: {},
+    candlestick: {},
     rsi:{},
   },
 
@@ -80,7 +80,7 @@ var charts = {
     chart.draw(chartdata, options);
   },
 
-  candelstick:function(data) {
+  candlestick:function(data) {
 
     asset_data = data['asset_display_data']
     cd = []
@@ -94,7 +94,7 @@ var charts = {
     $("#charts").append("<div id='" + id + "' style='width: 100%; height: 500px;'></div><div id='" + id + "info' style='margin-left:125px'>volatility: " + asset_data['volatility']+ "&#37; <br> average low/high change: " + asset_data['average_lhp_diff'] + "&#37; <br></div>")
 
     var options = {
-      title: asset_data['market'] + " " + asset_data['pair'] + " " + asset_data['period'] + " CandelStick",
+      title: asset_data['market'] + " " + asset_data['pair'] + " " + asset_data['period'] + " CandleStick",
       legend:'none',
     };
 
@@ -191,7 +191,7 @@ $(document).ready(function(){
     })
     $("#add_chart").submit(function(event){
       event.preventDefault()
-      c = {"detrend":charts.detrend, "candelstick":charts.candelstick, "rsi":charts.rsi}
+      c = {"detrend":charts.detrend, "candlestick":charts.candlestick, "rsi":charts.rsi}
       chart_type = $("#chart_type").val()
       market = $("#market").val()
       pair = $("#pair").val()
@@ -240,7 +240,7 @@ $(document).ready(function(){
 <form id="add_chart">
 Chart<select id="chart_type">
   <option value="detrend" selected>Detrend</option>
-  <option value="candelstick">CandelStick</option>
+  <option value="candlestick">CandleStick</option>
   <option value="rsi">RSI</option>
 </select>
 Market: <input type="text" id="market" />
