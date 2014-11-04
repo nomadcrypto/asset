@@ -68,27 +68,37 @@ def candelstick(asset):
     chartdata = [["Date", "Price Low", "Price Open", "Price Close", "Price High"],]
     asset_data = []
 
-    for price in asset.priceInfo.prices[total_offset:]:
+    for price in asset.priceInfo.prices:
         time_close = price[4].strftime("%b %d %H:%M")
         res = [time_close,price[2],price[0],price[1], price[3]]
         asset_data.append(res)
     return chartdata, asset_data
 
+def rsi(asset):
+
+    chartdata = [["Date", "RSI"],]
+    asset_data = []
+    prices = [p[1] for p in asset.priceInfo.prices]
+    rsis = asset.strat.getRSI(prices)
+    n= 0
+    for price in asset.priceInfo.prices:
+        time_close = price[4].strftime("%b %d %H:%M")
+        res = [time_close,rsis[n]]
+
+        asset_data.append(res)
+        n +=1 
+    return chartdata, asset_data
+
+
+
 
 def chart(request, chart_type, market, pair, step):
-    chart_types = {"detrend": detrend, "candelstick": candelstick}
+    chart_types = {"detrend": detrend, "candelstick": candelstick, "rsi":rsi}
     asset, display_periods = setup_asset(request, market, pair, step)
     chartdata, asset_data = chart_types[chart_type](asset)
     response = build_response(request, asset, chartdata, asset_data, step, display_periods)
     return HttpResponse(simplejson.dumps(response), content_type='application/json')
 
-
-def chart(request, chart_type, market, pair, step):
-    chart_types = {"detrend": detrend}
-    asset, display_periods = setup_asset(request, market, pair, step)
-    chartdata, asset_data = chart_types[chart_type](asset)
-    response = build_response(request, asset, chartdata, asset_data, step, display_periods)
-    return HttpResponse(simplejson.dumps(response), content_type='application/json')
 
 
 def charts(request):

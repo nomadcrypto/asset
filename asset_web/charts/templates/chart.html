@@ -23,6 +23,7 @@ var charts = {
       4 : {"name": "Detrend 12ma OP", "color":"#6600CC"}
     },
     candelstick: {},
+    rsi:{},
   },
 
   buildOptions:function() {
@@ -48,10 +49,35 @@ var charts = {
       index = v.id.split("_")[1]
       options[index] = charts.display_options[chart_type][index]
       options[index]['color'] = $("#" + v.id + "_color").val()
-      console.log(options[index])
+      //console.log(options[index])
     })
     return options
 
+  },
+
+  rsi:function(data){
+    asset_data = data['asset_display_data']
+    cd = []
+    $.each(data['chartdata'], function(k,v){
+      if(k > 0) {
+        cd.push([v[0],Number(v[1])])
+      } else {
+        cd.push(v)
+      }
+      //console.log(cd)
+      
+    })
+    chartdata = google.visualization.arrayToDataTable(cd)
+    id = asset_data['market'] + " " + asset_data['pair'] + "" + Math.random().toString(36).substring(7);
+    $("#charts").append("<div id='" + id + "' style='width: 100%; height: 500px;'></div><div id='" + id + "info' style='margin-left:125px'>volatility: " + asset_data['volatility']+ "&#37; <br> average low/high change: " + asset_data['average_lhp_diff'] + "&#37; <br></div>")
+
+    var options = {
+      title: asset_data['market'] + " " + asset_data['pair'] + " " + asset_data['period'] + " RSI",
+      legend:'none',
+    };
+
+    chart = new google.visualization.LineChart(document.getElementById(id));
+    chart.draw(chartdata, options);
   },
 
   candelstick:function(data) {
@@ -68,7 +94,7 @@ var charts = {
     $("#charts").append("<div id='" + id + "' style='width: 100%; height: 500px;'></div><div id='" + id + "info' style='margin-left:125px'>volatility: " + asset_data['volatility']+ "&#37; <br> average low/high change: " + asset_data['average_lhp_diff'] + "&#37; <br></div>")
 
     var options = {
-      title: asset_data['market'] + " " + asset_data['pair'] + " " + asset_data['period'],
+      title: asset_data['market'] + " " + asset_data['pair'] + " " + asset_data['period'] + " CandelStick",
       legend:'none',
     };
 
@@ -129,7 +155,7 @@ var charts = {
     }*/
 
     var options = {
-      title: asset_data['market'] + " " + asset_data['pair'] + " " + asset_data['period'],
+      title: asset_data['market'] + " " + asset_data['pair'] + " " + asset_data['period'] + " Detrend",
       series: display_series,
     }
     id = asset_data['market'] + " " + asset_data['pair'] + "" + Math.random().toString(36).substring(7);
@@ -165,7 +191,7 @@ $(document).ready(function(){
     })
     $("#add_chart").submit(function(event){
       event.preventDefault()
-      c = {"detrend":charts.detrend, "candelstick":charts.candelstick}
+      c = {"detrend":charts.detrend, "candelstick":charts.candelstick, "rsi":charts.rsi}
       chart_type = $("#chart_type").val()
       market = $("#market").val()
       pair = $("#pair").val()
@@ -215,6 +241,7 @@ $(document).ready(function(){
 Chart<select id="chart_type">
   <option value="detrend" selected>Detrend</option>
   <option value="candelstick">CandelStick</option>
+  <option value="rsi">RSI</option>
 </select>
 Market: <input type="text" id="market" />
 Pair: <input type="text" id="pair" />
