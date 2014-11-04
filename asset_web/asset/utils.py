@@ -17,7 +17,7 @@ class Utils(object):
         smas = np.convolve(values, weigths, 'valid')
         return smas # as a numpy array
     def getRSI(self,prices, n=14):
-        n = Decimal(n)
+        n= int(n)
         deltas = np.diff(prices)
         seed = deltas[:n+1.0]
         up = seed[seed>=0.0].sum()/n
