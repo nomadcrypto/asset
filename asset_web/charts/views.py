@@ -63,7 +63,7 @@ def detrend(asset):
         n += 1
     return chartdata, asset_data
 
-def candelstick(asset):
+def candlestick(asset):
 
     chartdata = [["Date", "Price Low", "Price Open", "Price Close", "Price High"],]
     asset_data = []
@@ -93,7 +93,7 @@ def rsi(asset):
 
 
 def chart(request, chart_type, market, pair, step):
-    chart_types = {"detrend": detrend, "candelstick": candelstick, "rsi":rsi}
+    chart_types = {"detrend": detrend, "candlestick": candlestick, "rsi":rsi}
     asset, display_periods = setup_asset(request, market, pair, step)
     chartdata, asset_data = chart_types[chart_type](asset)
     response = build_response(request, asset, chartdata, asset_data, step, display_periods)
